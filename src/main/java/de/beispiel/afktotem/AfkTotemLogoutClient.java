@@ -2,7 +2,9 @@ package de.beispiel.afktotem;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -16,10 +18,19 @@ public class AfkTotemLogoutClient implements ClientModInitializer {
 	private static float lastYaw = Float.NaN;
 	private static float lastPitch = Float.NaN;
 	private static int lastSlot = -1;
+	private static Screen openScreen = null;
 
 	@Override
 	public void onInitializeClient() {
 		ClientTickEvents.END_CLIENT_TICK.register(AfkTotemLogoutClient::tick);
+
+		// Merkt sich, ob gerade ein Menue (Chat, Inventar, Pause ...) offen ist
+		ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+			openScreen = screen;
+			ScreenEvents.remove(screen).register(closed -> {
+				if (openScreen == closed) openScreen = null;
+			});
+		});
 	}
 
 	private static void tick(Minecraft mc) {
@@ -30,7 +41,7 @@ public class AfkTotemLogoutClient implements ClientModInitializer {
 			return;
 		}
 
-		boolean input = mc.screen != null; // Chat, Inventar usw. zaehlt als Eingabe
+		boolean input = openScreen != null; // Chat, Inventar usw. zaehlt als Eingabe
 
 		float yaw = player.getYRot();
 		float pitch = player.getXRot();
