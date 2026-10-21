@@ -1,0 +1,22 @@
+{
+	"schemaVersion": 1,
+	"id": "afktotemlogout",
+	"version": "${version}",
+	"name": "AFK Totem Logout",
+	"description": "Verlaesst Server/Welt automatisch, wenn dein Totem poppt waehrend du mindestens 10 Sekunden AFK bist.",
+	"authors": ["Du"],
+	"license": "MIT",
+	"environment": "client",
+	"entrypoints": {
+		"client": ["de.beispiel.afktotem.AfkTotemLogoutClient"]
+	},
+	"mixins": [
+		{ "config": "afktotemlogout.mixins.json", "environment": "client" }
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
