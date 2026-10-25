@@ -27,7 +27,7 @@ public class AfkTotemLogoutClient implements ClientModInitializer {
 
 		// Taste O oeffnet das Einstellungsmenue
 		openMenuKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-			"key.afktotemlogout.open_menu", InputConstants.Type.KEY, InputConstants.KEY_O, KeyMapping.Category.MISC));
+			"key.afktotemlogout.open_menu", InputConstants.KEY_O, KeyMapping.Category.MISC));
 
 		ClientTickEvents.END_CLIENT_TICK.register(AfkTotemLogoutClient::tick);
 
