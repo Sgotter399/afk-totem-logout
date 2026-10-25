@@ -1,7 +1,9 @@
 package de.beispiel.afktotem;
 
 import net.fabricmc.api.ClientModInitializer;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -11,8 +13,7 @@ import net.minecraft.network.chat.Component;
 
 public class AfkTotemLogoutClient implements ClientModInitializer {
 
-	/** 10 Sekunden * 20 Ticks */
-	public static final int AFK_TICKS = 10 * 20;
+	private static KeyMapping openMenuKey;
 
 	private static int idleTicks = 0;
 	private static float lastYaw = Float.NaN;
@@ -22,6 +23,12 @@ public class AfkTotemLogoutClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		AfkConfig.load();
+
+		// Taste K oeffnet das Einstellungsmenue (75 = GLFW_KEY_K)
+		openMenuKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+			"key.afktotemlogout.open_menu", InputConstants.Type.KEYSYM, 75, KeyMapping.Category.MISC));
+
 		ClientTickEvents.END_CLIENT_TICK.register(AfkTotemLogoutClient::tick);
 
 		// Merkt sich, ob gerade ein Menue (Chat, Inventar, Pause ...) offen ist
@@ -34,6 +41,10 @@ public class AfkTotemLogoutClient implements ClientModInitializer {
 	}
 
 	private static void tick(Minecraft mc) {
+		while (openMenuKey.consumeClick()) {
+			mc.setScreen(new AfkConfigScreen());
+		}
+
 		LocalPlayer player = mc.player;
 		if (player == null) {
 			idleTicks = 0;
@@ -70,14 +81,14 @@ public class AfkTotemLogoutClient implements ClientModInitializer {
 	}
 
 	public static boolean isAfk() {
-		return idleTicks >= AFK_TICKS;
+		return AfkConfig.enabled && idleTicks >= AfkConfig.seconds * 20;
 	}
 
 	public static void disconnect(Minecraft mc) {
 		var connection = mc.getConnection();
 		if (connection != null) {
 			connection.getConnection().disconnect(
-				Component.literal("AFK Totem Logout: Totem ist gepoppt, waehrend du AFK warst."));
+				Component.literal("AFK Totem Logout: Your totem popped while you were AFK."));
 		}
 	}
 }
