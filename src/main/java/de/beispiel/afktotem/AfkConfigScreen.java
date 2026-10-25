@@ -19,9 +19,8 @@ public class AfkConfigScreen extends Screen {
 		int cx = this.width / 2;
 		int y = this.height / 2 - 50;
 
-		StringWidget title = new StringWidget(cx - 100, y - 25, 200, 9, this.title, this.font);
-		title.alignCenter();
-		this.addRenderableWidget(title);
+		int titleWidth = this.font.width(this.title);
+		this.addRenderableWidget(new StringWidget(cx - titleWidth / 2, y - 25, titleWidth, 9, this.title, this.font));
 
 		toggleButton = Button.builder(toggleText(), b -> {
 			AfkConfig.enabled = !AfkConfig.enabled;
@@ -43,7 +42,7 @@ public class AfkConfigScreen extends Screen {
 	@Override
 	public void onClose() {
 		AfkConfig.save();
-		if (this.minecraft != null) this.minecraft.setScreen(null);
+		if (this.minecraft != null) this.minecraft.gui.setScreen(null);
 	}
 
 	private static class TimeSlider extends AbstractSliderButton {
