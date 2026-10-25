@@ -27,7 +27,7 @@ public class AfkTotemLogoutClient implements ClientModInitializer {
 
 		// Taste K oeffnet das Einstellungsmenue (75 = GLFW_KEY_K)
 		openMenuKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
-			"key.afktotemlogout.open_menu", InputConstants.Type.KEYSYM, 75, KeyMapping.Category.MISC));
+			"key.afktotemlogout.open_menu", InputConstants.Type.KEYSYM, 79, KeyMapping.Category.MISC));
 
 		ClientTickEvents.END_CLIENT_TICK.register(AfkTotemLogoutClient::tick);
 
