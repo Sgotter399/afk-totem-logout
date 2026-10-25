@@ -4,7 +4,7 @@
 	"version": "${version}",
 	"name": "AFK Totem Logout",
 	"description": "Verlaesst Server/Welt automatisch, wenn dein Totem poppt waehrend du mindestens 10 Sekunden AFK bist.",
-	"authors": ["Du"],
+	"authors": ["Sgotter399"],
 	"license": "MIT",
 	"environment": "client",
 	"entrypoints": {
