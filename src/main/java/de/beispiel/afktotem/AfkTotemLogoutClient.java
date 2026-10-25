@@ -3,7 +3,7 @@ package de.beispiel.afktotem;
 import net.fabricmc.api.ClientModInitializer;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -25,9 +25,9 @@ public class AfkTotemLogoutClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		AfkConfig.load();
 
-		// Taste K oeffnet das Einstellungsmenue (75 = GLFW_KEY_K)
-		openMenuKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
-			"key.afktotemlogout.open_menu", InputConstants.Type.KEYSYM, 79, KeyMapping.Category.MISC));
+		// Taste O oeffnet das Einstellungsmenue
+		openMenuKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
+			"key.afktotemlogout.open_menu", InputConstants.Type.KEY, InputConstants.KEY_O, KeyMapping.Category.MISC));
 
 		ClientTickEvents.END_CLIENT_TICK.register(AfkTotemLogoutClient::tick);
 
@@ -42,7 +42,7 @@ public class AfkTotemLogoutClient implements ClientModInitializer {
 
 	private static void tick(Minecraft mc) {
 		while (openMenuKey.consumeClick()) {
-			mc.setScreen(new AfkConfigScreen());
+			mc.gui.setScreen(new AfkConfigScreen());
 		}
 
 		LocalPlayer player = mc.player;
